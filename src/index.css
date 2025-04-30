@@ -1,0 +1,21 @@
+body{
+    font-family: Arial, sans-serif;
+}
+
+.wrapper{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.wrapper main{
+    flex: 1;
+}
+
+.bg-dark-blue{
+    background-color: #034159;
+}
+
+.bg-neon-green{
+    background-color: #02735E;
+}
