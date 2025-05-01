@@ -1,3 +1,7 @@
 export default function HomePage() {
-  return <h1>Benvenuto nella Home</h1>;
+  return (
+    <div className="homepage-intro-box">
+      <h1>Aaa! Sei nella Home, non so cosa metterci...</h1>
+    </div>
+  );
 }

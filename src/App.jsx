@@ -3,13 +3,20 @@ import PagesLayout from "./layouts/PagesLayout.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import ExperiencePage from "./pages/ExperiencePage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
+import ExperienceShopPage from "./pages/ExperienceShopPage.jsx";
+import ExperienceLogPage from "./pages/ExperienceLogPage.jsx";
+import ExperienceRollPage from "./pages/ExperienceRollPage.jsx";
 
 function App() {
   return (
     <Routes>
       <Route element={<PagesLayout />}>
         <Route path="/" element={<HomePage />} />
-        <Route path="/exp" element={<ExperiencePage />} />
+        <Route path="/exp" element={<ExperiencePage />}>
+          <Route path="log" element={<ExperienceLogPage />} />
+          <Route path="shop" element={<ExperienceShopPage />} />
+          <Route path="roll" element={<ExperienceRollPage />} />
+        </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
