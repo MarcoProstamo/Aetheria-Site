@@ -3,12 +3,9 @@ import { db } from "../firebase";
 import {
   collection,
   addDoc,
-  getDocs,
   onSnapshot,
   query,
-  doc,
-  updateDoc,
-  deleteDoc,
+  orderBy,
 } from "firebase/firestore";
 
 export default function ExperienceLogPage() {
@@ -21,7 +18,7 @@ export default function ExperienceLogPage() {
   });
 
   useEffect(() => {
-    const q = query(collection(db, "experienceLog"));
+    const q = query(collection(db, "experienceLog"), orderBy("session"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const items = snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -52,7 +49,6 @@ export default function ExperienceLogPage() {
       id: Date.now(),
       quantity: parseInt(newEntry.quantity),
     };
-    console.log("Salvo su Firebase:", entry);
     await addDoc(collection(db, "experienceLog"), entry);
     setNewEntry({ session: "", quantity: "", description: "", extra: "" });
   };
