@@ -1,7 +1,133 @@
+import { useState, useEffect } from "react";
+import { db } from "../firebase";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  onSnapshot,
+  query,
+  doc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
+
 export default function ExperienceLogPage() {
+  const [log, setLog] = useState([]);
+  const [newEntry, setNewEntry] = useState({
+    session: "",
+    quantity: "",
+    description: "",
+    extra: "",
+  });
+
+  useEffect(() => {
+    const q = query(collection(db, "experienceLog"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const items = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setLog(items);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleChange = (e) => {
+    setNewEntry({ ...newEntry, [e.target.name]: e.target.value });
+  };
+
+  const handleAdd = async () => {
+    if (
+      !newEntry.session.trim() ||
+      !newEntry.quantity ||
+      !newEntry.description.trim()
+    ) {
+      alert("Compila almeno Sessione, Quantità e Descrizione.");
+      return;
+    }
+
+    const entry = {
+      ...newEntry,
+      id: Date.now(),
+      quantity: parseInt(newEntry.quantity),
+    };
+    console.log("Salvo su Firebase:", entry);
+    await addDoc(collection(db, "experienceLog"), entry);
+    setNewEntry({ session: "", quantity: "", description: "", extra: "" });
+  };
+
   return (
-    <section className="d-flex justify-content-center align-items-center my-5">
-      <h1>Quì ci sarà il Log dell'Esperienza</h1>
-    </section>
+    <div className="container">
+      <h1 className="text-semibold text-dark mt-5 mb-3">Log Esperienza</h1>
+
+      {/* FORM */}
+      <div className="row mb-4">
+        <div className="col">
+          <input
+            name="session"
+            placeholder="Session"
+            className="form-control"
+            value={newEntry.session}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col">
+          <input
+            name="quantity"
+            placeholder="Quantity"
+            type="number"
+            className="form-control"
+            value={newEntry.quantity}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col">
+          <input
+            name="description"
+            placeholder="Description"
+            className="form-control"
+            value={newEntry.description}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col">
+          <input
+            name="extra"
+            placeholder="Extra"
+            className="form-control"
+            value={newEntry.extra}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-auto">
+          <button onClick={handleAdd} className="btn btn-success">
+            Aggiungi
+          </button>
+        </div>
+      </div>
+
+      {/* TABELLA */}
+      <table className="table table-bordered table-striped">
+        <thead className="table-dark">
+          <tr>
+            <th>Session</th>
+            <th>Quantity</th>
+            <th>Description</th>
+            <th>Extra</th>
+          </tr>
+        </thead>
+        <tbody>
+          {log.map((entry) => (
+            <tr key={entry.id}>
+              <td>{entry.session}</td>
+              <td>{entry.quantity}</td>
+              <td>{entry.description}</td>
+              <td>{entry.extra}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
