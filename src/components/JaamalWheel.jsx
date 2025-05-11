@@ -4,7 +4,6 @@ import { useShopContext } from "../contexts/ShaZamShop";
 
 export default function WheelComponent() {
   const entries = useShopContext();
-  console.log(entries);
 
   const [mustSpin, setMustSpin] = useState(false);
   const [prizeNumber, setPrizeNumber] = useState(0);
@@ -17,7 +16,7 @@ export default function WheelComponent() {
   };
 
   return (
-    <div className="text-center">
+    <div className="d-flex flex-column justify-content-center align-items-center text-center">
       <Wheel
         mustStartSpinning={mustSpin}
         prizeNumber={prizeNumber}
@@ -45,7 +44,7 @@ export default function WheelComponent() {
       </button>
 
       {result && (
-        <div className="card mt-4 bg-light text-dark">
+        <div className="card mt-4 bg-light text-dark w-100">
           <div className="card-body">
             <h5 className="card-title">{result.name}</h5>
             <p className="card-text">{result.description}</p>
