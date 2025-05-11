@@ -3,7 +3,7 @@ import CampoClownato from "../components/CampoClownato";
 export default function HomePage() {
   return (
     <section>
-      <div className="container">
+      <div className="container my-5">
         <div className="row">
           <div className="col-6">
             <div className="text-semibold text-danger mt-5 mb-3">

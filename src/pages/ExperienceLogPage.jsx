@@ -55,9 +55,10 @@ export default function ExperienceLogPage() {
 
   return (
     <div className="container">
-      <h1 className="text-semibold text-dark mt-5 mb-3">Log Esperienza</h1>
+      <h1 className="text-semibold text-dark mt-5 mb-3">
+        Cronologia Esperienza
+      </h1>
 
-      {/* FORM */}
       <div className="row mb-4">
         <div className="col">
           <input
@@ -103,8 +104,7 @@ export default function ExperienceLogPage() {
         </div>
       </div>
 
-      {/* TABELLA */}
-      <table className="table table-bordered table-striped">
+      <table className="table table-bordered table-striped mb-5">
         <thead className="table-dark">
           <tr>
             <th>Session</th>

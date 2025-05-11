@@ -1,9 +1,10 @@
-import JaamalWheel from "../components/JaamalWheel";
+import { useState } from "react";
+import { Wheel } from "react-custom-roulette";
 
 const rolls = [
   {
     id: 1,
-    name: "Ability Score Improvement",
+    name: "✨",
     category: "Feat",
     prerequisite: "Lvl. 4",
     price: 2000,
@@ -12,7 +13,7 @@ const rolls = [
   },
   {
     id: 2,
-    name: "Armor Proficiency",
+    name: "🦾",
     category: "Proficiency",
     prerequisite: "Previous Armor Prof.",
     price: 1000,
@@ -20,7 +21,7 @@ const rolls = [
   },
   {
     id: 3,
-    name: "Attunement Slot",
+    name: "🪄",
     category: "Gift",
     prerequisite: "—",
     price: 2500,
@@ -28,7 +29,7 @@ const rolls = [
   },
   {
     id: 4,
-    name: "Blessing",
+    name: "🤡",
     category: "Gift",
     prerequisite: "—",
     price: 2500,
@@ -36,7 +37,7 @@ const rolls = [
   },
   {
     id: 5,
-    name: "Customized Feature",
+    name: "🧙‍♂️",
     category: "Gift",
     prerequisite: "Lvl. 5",
     price: 0,
@@ -44,7 +45,7 @@ const rolls = [
   },
   {
     id: 6,
-    name: "Epic Ability Score Improvement",
+    name: "🌟",
     category: "Epic Feat",
     prerequisite: "Lvl. 8, Selected Stat 20+",
     price: 4000,
@@ -53,7 +54,7 @@ const rolls = [
   },
   {
     id: 7,
-    name: "Epic Boon",
+    name: "🎁",
     category: "Epic Feat",
     prerequisite: "Selected Boon Prer.",
     price: 4500,
@@ -61,7 +62,7 @@ const rolls = [
   },
   {
     id: 8,
-    name: "Exotic Language",
+    name: "🗣️",
     category: "Feat",
     prerequisite: "—",
     price: 500,
@@ -69,7 +70,7 @@ const rolls = [
   },
   {
     id: 9,
-    name: "Expertise",
+    name: "🧠",
     category: "Proficiency",
     prerequisite: "Selected Skill Prof.",
     price: 1000,
@@ -77,7 +78,7 @@ const rolls = [
   },
   {
     id: 10,
-    name: "Extra Archetype",
+    name: "🧑‍🔧",
     category: "Gift",
     prerequisite: "Selected Class Lvl. 3",
     price: 7500,
@@ -85,7 +86,7 @@ const rolls = [
   },
   {
     id: 11,
-    name: "Feature From Another Class",
+    name: "🧌",
     category: "Gift",
     prerequisite: "Twice the Feature Lvl. in Main Class",
     price: 10000,
@@ -93,7 +94,7 @@ const rolls = [
   },
   {
     id: 12,
-    name: "Generic Feat",
+    name: "🧩",
     category: "Feat",
     prerequisite: "Selected Feat Prer.",
     price: 2500,
@@ -101,7 +102,7 @@ const rolls = [
   },
   {
     id: 13,
-    name: "Legendary Resistance",
+    name: "🛡️",
     category: "Gift",
     prerequisite: "—",
     price: 5000,
@@ -110,7 +111,7 @@ const rolls = [
   },
   {
     id: 14,
-    name: "Origin Feat",
+    name: "🤡",
     category: "Origin Feat",
     prerequisite: "—",
     price: 1500,
@@ -118,7 +119,7 @@ const rolls = [
   },
   {
     id: 15,
-    name: "Secret Language",
+    name: "🗣️",
     category: "Feat",
     prerequisite: "—",
     price: 1000,
@@ -126,7 +127,7 @@ const rolls = [
   },
   {
     id: 16,
-    name: "Skill Proficiency",
+    name: "🧠",
     category: "Proficiency",
     prerequisite: "—",
     price: 50,
@@ -134,7 +135,7 @@ const rolls = [
   },
   {
     id: 17,
-    name: "Standard Language",
+    name: "🗣️",
     category: "Feat",
     prerequisite: "—",
     price: 0,
@@ -142,7 +143,7 @@ const rolls = [
   },
   {
     id: 18,
-    name: "Tool Proficiency",
+    name: "🛠️",
     category: "Proficiency",
     prerequisite: "—",
     price: 500,
@@ -150,7 +151,7 @@ const rolls = [
   },
   {
     id: 19,
-    name: "Weapon Proficiency",
+    name: "⚔️",
     category: "Proficiency",
     prerequisite: "—",
     price: 500,
@@ -158,25 +159,71 @@ const rolls = [
   },
   {
     id: 20,
-    name: "Level Up",
+    name: "🪙",
     category: "Gift",
     prerequisite: "Milestone",
     price: 0,
     description: "Gain a Level",
   },
 ];
+const MAX_LABEL_LENGTH = 10;
+const truncatedData = rolls.map((item) => ({
+  option:
+    item.name.length > MAX_LABEL_LENGTH
+      ? item.name.slice(0, MAX_LABEL_LENGTH - 3) + "..."
+      : item.name,
+}));
 
-export default function ExperienceRollPage() {
+export default function WheelComponent() {
+  const [mustSpin, setMustSpin] = useState(false);
+  const [prizeNumber, setPrizeNumber] = useState(0);
+  const [result, setResult] = useState(null);
+
+  const handleSpinClick = () => {
+    const randomIndex = Math.floor(Math.random() * truncatedData.length);
+    setPrizeNumber(randomIndex);
+    setMustSpin(true);
+  };
+
   return (
-    <section className="container">
-      <h1 className="text-semibold text-dark mt-5 mb-3">Emporio di Sha-Zam</h1>
-      <div className="container my-5">
-        <div className="row">
-          <div className="col d-flex justify-content-center align-items-start">
-            <JaamalWheel />
+    <div className="text-center">
+      <Wheel
+        mustStartSpinning={mustSpin}
+        prizeNumber={prizeNumber}
+        data={truncatedData}
+        spinDuration={0.4}
+        innerRadius={30}
+        innerBorderWidth={2}
+        outerBorderColor="#ffffff"
+        outerBorderWidth={2}
+        innerBorderColor="#ffffff"
+        radiusLineColor="#ffffff"
+        radiusLineWidth={2}
+        textDistance={70}
+        fontSize={30}
+        fontFamily="Arial"
+        textColors={["#000000"]}
+        backgroundColors={["#FFCC00", "#FF9900", "#3366CC", "#66CCFF"]}
+        onStopSpinning={() => {
+          setMustSpin(false);
+          setResult(rolls[prizeNumber]);
+        }}
+      />
+      <button className="btn btn-primary mt-4" onClick={handleSpinClick}>
+        Gira la Ruota!
+      </button>
+
+      {result && (
+        <div className="card mt-4 bg-light text-dark">
+          <div className="card-body">
+            <h5 className="card-title">{result.name}</h5>
+            <p className="card-text">{result.description}</p>
+            <small>
+              Categoria: {result.category} | Prezzo: {result.price}
+            </small>
           </div>
         </div>
-      </div>
-    </section>
+      )}
+    </div>
   );
 }

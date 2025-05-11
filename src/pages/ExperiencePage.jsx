@@ -4,16 +4,16 @@ export default function ExperiencePage() {
   const outlet = useOutlet();
 
   return (
-    <>
+    <section>
       <nav className="d-flex justify-content-center gap-3 my-3">
         <button type="button" className="btn btn-primary">
           <Link to="./log" className="text-dark text-decoration-none">
-            Log
+            Cronologia Esperienza
           </Link>
         </button>
         <button type="button" className="btn btn-primary">
           <Link to="./roll" className="text-dark text-decoration-none">
-            Roll
+            Emporio di Sha-Zam
           </Link>
         </button>
         <button type="button" className="btn btn-primary">
@@ -37,6 +37,6 @@ export default function ExperiencePage() {
       )}
 
       <Outlet />
-    </>
+    </section>
   );
 }

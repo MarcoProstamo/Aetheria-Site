@@ -10,10 +10,6 @@ body{
 
 .wrapper main{
     flex: 1;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .bg-dark-blue{
