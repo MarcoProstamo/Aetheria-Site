@@ -7,14 +7,17 @@ import "./index.css";
 import App from "./App.jsx";
 import { ShopContextProvider } from "./contexts/ShaZamShop.jsx";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
+import { ExperienceProvider } from "./contexts/ExperienceContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
       <ShopContextProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <ExperienceProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </ExperienceProvider>
       </ShopContextProvider>
     </AuthProvider>
   </StrictMode>

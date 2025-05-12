@@ -4,6 +4,7 @@ import { auth } from "../firebase";
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { signOut } from "firebase/auth";
+import { useExperience } from "../contexts/ExperienceContext";
 
 const players = {
   master: { email: "master@email.com", password: "master" },
@@ -36,14 +37,6 @@ function Login() {
     }
   };
 
-  if (user) {
-    return (
-      <div className="alert alert-success">
-        Ciao, {user.email}! Sei loggato con successo.
-      </div>
-    );
-  }
-
   return (
     <div className="container mt-4">
       <h1 className="text-center text-light">Login</h1>
@@ -65,13 +58,13 @@ function Login() {
 
 function LogoutButton() {
   const { user } = useAuth();
+  const { totalExp } = useExperience();
 
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      console.log("Utente disconnesso");
     } catch (error) {
-      console.error("Errore durante il logout:", error);
+      console.error(error);
     }
   };
 
@@ -83,6 +76,9 @@ function LogoutButton() {
     <div className="text-center">
       <div className="alert alert-success mb-3">
         Ciao, <strong>{nomeGiocatore}</strong>! 👋
+      </div>
+      <div className="alert alert-info mb-3">
+        Esperienza Totale: <strong>{totalExp}</strong>
       </div>
       <button className="btn btn-secondary" onClick={handleLogout}>
         Logout
@@ -105,7 +101,7 @@ export default function ExperiencePage() {
         </button>
         <button type="button" className="btn btn-primary">
           <Link to="./roll" className="text-dark text-decoration-none">
-            Emporio di Sha-Zam
+            Ruota di Jaamal
           </Link>
         </button>
         <button type="button" className="btn btn-primary">

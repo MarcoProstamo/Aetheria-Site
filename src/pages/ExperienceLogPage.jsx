@@ -7,8 +7,10 @@ import {
   query,
   orderBy,
 } from "firebase/firestore";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function ExperienceLogPage() {
+  const { user } = useAuth();
   const [log, setLog] = useState([]);
   const [newEntry, setNewEntry] = useState({
     session: "",
@@ -25,6 +27,7 @@ export default function ExperienceLogPage() {
         ...doc.data(),
       }));
       setLog(items);
+      setTotalExp(items.reduce((acc, item) => acc + item.quantity, 0));
     });
 
     return () => unsubscribe();
@@ -59,50 +62,52 @@ export default function ExperienceLogPage() {
         Cronologia Esperienza
       </h1>
 
-      <div className="row mb-4">
-        <div className="col">
-          <input
-            name="session"
-            placeholder="Session"
-            className="form-control"
-            value={newEntry.session}
-            onChange={handleChange}
-          />
+      {user?.email?.split("@")[0] === "master" && (
+        <div className="row mb-4">
+          <div className="col">
+            <input
+              name="session"
+              placeholder="Session"
+              className="form-control"
+              value={newEntry.session}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="col">
+            <input
+              name="quantity"
+              placeholder="Quantity"
+              type="number"
+              className="form-control"
+              value={newEntry.quantity}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="col">
+            <input
+              name="description"
+              placeholder="Description"
+              className="form-control"
+              value={newEntry.description}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="col">
+            <input
+              name="extra"
+              placeholder="Extra"
+              className="form-control"
+              value={newEntry.extra}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="col-auto">
+            <button onClick={handleAdd} className="btn btn-success">
+              Aggiungi
+            </button>
+          </div>
         </div>
-        <div className="col">
-          <input
-            name="quantity"
-            placeholder="Quantity"
-            type="number"
-            className="form-control"
-            value={newEntry.quantity}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="col">
-          <input
-            name="description"
-            placeholder="Description"
-            className="form-control"
-            value={newEntry.description}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="col">
-          <input
-            name="extra"
-            placeholder="Extra"
-            className="form-control"
-            value={newEntry.extra}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="col-auto">
-          <button onClick={handleAdd} className="btn btn-success">
-            Aggiungi
-          </button>
-        </div>
-      </div>
+      )}
 
       <table className="table table-bordered table-striped mb-5">
         <thead className="table-dark">
