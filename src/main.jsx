@@ -6,13 +6,16 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./index.css";
 import App from "./App.jsx";
 import { ShopContextProvider } from "./contexts/ShaZamShop.jsx";
+import { AuthProvider } from "./contexts/AuthContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <ShopContextProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </ShopContextProvider>
+    <AuthProvider>
+      <ShopContextProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ShopContextProvider>
+    </AuthProvider>
   </StrictMode>
 );
