@@ -8,17 +8,19 @@ import App from "./App.jsx";
 import { ShopContextProvider } from "./contexts/ShaZamShop.jsx";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
 import { ExperienceProvider } from "./contexts/ExperienceContext.jsx";
-
+import { BestiaryContextProvider } from "./contexts/BestiaryContext.jsx";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
-      <ShopContextProvider>
-        <ExperienceProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </ExperienceProvider>
-      </ShopContextProvider>
+      <BestiaryContextProvider>
+        <ShopContextProvider>
+          <ExperienceProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </ExperienceProvider>
+        </ShopContextProvider>
+      </BestiaryContextProvider>
     </AuthProvider>
   </StrictMode>
 );
