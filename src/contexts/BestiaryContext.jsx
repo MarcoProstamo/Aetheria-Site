@@ -200,8 +200,8 @@ export function BestiaryContextProvider({ children }) {
   useEffect(() => {
     const loadMonsters = async () => {
       const books = [
-        { url: "/data/bestiary-xmm.json", source: "MM2024" },
         { url: "/data/bestiary-xdmg.json", source: "DMG2024" },
+        { url: "/data/bestiary-xmm.json", source: "MM2024" },
         { url: "/data/bestiary-xphb.json", source: "PHB2024" },
       ];
 

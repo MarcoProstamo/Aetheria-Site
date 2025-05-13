@@ -10,24 +10,23 @@ function getCellColor(value) {
   return "bg-primary";
 }
 
-function getPercentage(value, total) {
-  if (total === 0) return 0;
-  return Math.round((value / total) * 100);
-}
-
-function getValueByType(creatures, damageType, immunitiesTrigger) {
-  const total = creatures.length;
-  const totalImmune = creatures.filter((creature) =>
-    immunitiesTrigger
-      ? creature.immune?.includes(damageType)
-      : creature.resist?.includes(damageType)
-  ).length;
-  return getPercentage(totalImmune, total);
+function getValueByType(creatures, damageType, triggerValue) {
+  const totalImmune = creatures.filter((creature) => {
+    switch (triggerValue) {
+      case 1:
+        return creature.immune?.includes(damageType);
+      case 2:
+        return creature.resist?.includes(damageType);
+      case 3:
+        return creature.vulnerable?.includes(damageType);
+    }
+  });
+  return totalImmune.length;
 }
 
 export default function BestiaryPage() {
   const { types, damages, monstersByType } = useBestiaryContext();
-  const [immunitiesTrigger, setImmunitiesTrigger] = useState(true);
+  const [triggerValue, setTriggerValue] = useState(1);
 
   const rowLabels = damages;
   const columnLabels = types;
@@ -39,16 +38,22 @@ export default function BestiaryPage() {
   return (
     <div className="container my-5">
       <div className="d-flex align-items-center justify-content-between gap-3 mb-5">
-        {immunitiesTrigger ? (
+        {(triggerValue === 1 && (
           <h1 className="text-center fw-bold">Immunità ai Danni</h1>
-        ) : (
-          <h1 className="text-center fw-bold">Resistenza ai Danni</h1>
-        )}
+        )) ||
+          (triggerValue === 2 && (
+            <h1 className="text-center fw-bold">Resistenza ai Danni</h1>
+          )) ||
+          (triggerValue === 3 && (
+            <h1 className="text-center fw-bold">Vulnerabilità ai Danni</h1>
+          ))}
         <button
           type="button"
           className="fs-5 btn btn-primary fw-semibold"
           onClick={() => {
-            setImmunitiesTrigger(!immunitiesTrigger);
+            setTriggerValue(
+              triggerValue === 1 ? 2 : triggerValue === 2 ? 3 : 1
+            );
           }}
         >
           Switch
@@ -75,7 +80,7 @@ export default function BestiaryPage() {
                   const value = getValueByType(
                     monsters,
                     damageType.toLowerCase(),
-                    immunitiesTrigger
+                    triggerValue
                   );
                   return (
                     <td
@@ -95,12 +100,12 @@ export default function BestiaryPage() {
       <div className="mt-5 text-bg-dark p-3 rounded d-flex justify-content-center align-items-center flex-column w-50 mx-auto">
         <h3>Legenda</h3>
         <div className="d-flex flex-wrap gap-3">
-          <div className="rounded p-2 bg-opacity-10 bg-success">0%</div>
-          <div className="rounded p-2 bg-opacity-20 bg-success">1-10%</div>
-          <div className="rounded p-2 bg-opacity-30 bg-success">11-25%</div>
-          <div className="rounded p-2 bg-opacity-50 bg-info">26-50%</div>
-          <div className="rounded p-2 bg-opacity-70 bg-info">51-75%</div>
-          <div className="rounded p-2 bg-primary">76-100%</div>
+          <div className="rounded p-2 bg-opacity-10 bg-success">0</div>
+          <div className="rounded p-2 bg-opacity-20 bg-success">1-10</div>
+          <div className="rounded p-2 bg-opacity-30 bg-success">11-25</div>
+          <div className="rounded p-2 bg-opacity-50 bg-info">26-50</div>
+          <div className="rounded p-2 bg-opacity-70 bg-info">51-75</div>
+          <div className="rounded p-2 bg-primary">76+</div>
         </div>
       </div>
     </div>

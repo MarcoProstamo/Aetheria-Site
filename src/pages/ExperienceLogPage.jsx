@@ -27,7 +27,6 @@ export default function ExperienceLogPage() {
         ...doc.data(),
       }));
       setLog(items);
-      setTotalExp(items.reduce((acc, item) => acc + item.quantity, 0));
     });
 
     return () => unsubscribe();
