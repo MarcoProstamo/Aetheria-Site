@@ -27,7 +27,12 @@ export default function Header() {
             </li>
             <li className="nav-item">
               <Link to={"/exp"} className="nav-link">
-                Experience
+                Esperienza
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to={"/bestiary"} className="nav-link">
+                Bestiario
               </Link>
             </li>
           </ul>
