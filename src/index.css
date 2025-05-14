@@ -20,6 +20,15 @@ body{
     background-color: #02735E;
 }
 
+.cursor-pointer{
+    cursor: pointer;
+}
+
+.cursor-pointer:hover{
+    scale: 1.1;
+    background-color: darkgray !important;
+}
+
 .homepage-intro-box{
     position: absolute;
     top: 50%;

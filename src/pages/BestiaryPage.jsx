@@ -21,12 +21,13 @@ function getValueByType(creatures, damageType, triggerValue) {
         return creature.vulnerable?.includes(damageType);
     }
   });
-  return totalImmune.length;
+  return totalImmune;
 }
 
 export default function BestiaryPage() {
   const { types, damages, monstersByType } = useBestiaryContext();
   const [triggerValue, setTriggerValue] = useState(1);
+  const [modalData, setModalData] = useState(null);
 
   const rowLabels = damages;
   const columnLabels = types;
@@ -36,8 +37,8 @@ export default function BestiaryPage() {
   });
 
   return (
-    <div className="container my-5">
-      <div className="d-flex align-items-center justify-content-between gap-3 mb-5">
+    <div className="container my-3">
+      <div className="d-flex align-items-center justify-content-between gap-3 mb-2">
         {(triggerValue === 1 && (
           <h1 className="text-center fw-bold">Immunità ai Danni</h1>
         )) ||
@@ -82,12 +83,25 @@ export default function BestiaryPage() {
                     damageType.toLowerCase(),
                     triggerValue
                   );
+                  const count = value.length;
+
                   return (
                     <td
                       key={colIndex}
-                      className={`text-center ${getCellColor(value)}`}
+                      className={`text-center cursor-pointer ${getCellColor(
+                        count
+                      )}`}
+                      onClick={() =>
+                        setModalData({
+                          type: creatureType,
+                          damage: damageType,
+                          value,
+                        })
+                      }
+                      data-bs-toggle="modal"
+                      data-bs-target="#damageModal"
                     >
-                      {value}
+                      {count}
                     </td>
                   );
                 })}
@@ -97,6 +111,7 @@ export default function BestiaryPage() {
         </table>
       </div>
 
+      {/* Legenda */}
       <div className="mt-5 text-bg-dark p-3 rounded d-flex justify-content-center align-items-center flex-column w-50 mx-auto">
         <h3>Legenda</h3>
         <div className="d-flex flex-wrap gap-3">
@@ -106,6 +121,52 @@ export default function BestiaryPage() {
           <div className="rounded p-2 bg-opacity-50 bg-info">26-50</div>
           <div className="rounded p-2 bg-opacity-70 bg-info">51-75</div>
           <div className="rounded p-2 bg-primary">76+</div>
+        </div>
+      </div>
+
+      {/* Modal */}
+      <div
+        className="modal fade"
+        id="damageModal"
+        tabIndex="-1"
+        aria-labelledby="damageModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5" id="damageModalLabel">
+                {modalData?.type || "Tipo"} - {modalData?.damage || "Danno"}
+              </h1>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body">
+              {(modalData?.value.length > 0 && (
+                <p>
+                  Creature:
+                  <ul>
+                    {modalData?.value.map((creature) => {
+                      return <li key={creature.id}> {creature.name}</li>;
+                    })}
+                  </ul>
+                </p>
+              )) || <p>Nessuna creatura trovata</p>}
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Chiudi
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
