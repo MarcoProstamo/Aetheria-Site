@@ -83,6 +83,9 @@ export default function BestiaryPage() {
                     damageType.toLowerCase(),
                     triggerValue
                   );
+                  value.sort((a, b) => a.name.localeCompare(b.name));
+                  console.log(value);
+
                   const count = value.length;
 
                   return (
@@ -124,7 +127,7 @@ export default function BestiaryPage() {
         </div>
       </div>
 
-      {/* Modal */}
+      {/* Creature List Modal By Type*/}
       <div
         className="modal fade"
         id="damageModal"
@@ -135,7 +138,10 @@ export default function BestiaryPage() {
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
-              <h1 className="modal-title fs-5" id="damageModalLabel">
+              <h1
+                className="modal-title fs-5 text-uppercase fw-semibold"
+                id="damageModalLabel"
+              >
                 {modalData?.type || "Tipo"} - {modalData?.damage || "Danno"}
               </h1>
               <button
@@ -146,16 +152,29 @@ export default function BestiaryPage() {
               ></button>
             </div>
             <div className="modal-body">
+              {modalData?.value.length > 0 && <span>Creature:</span>}
               {(modalData?.value.length > 0 && (
-                <p>
-                  Creature:
-                  <ul>
-                    {modalData?.value.map((creature) => {
-                      return <li key={creature.id}> {creature.name}</li>;
-                    })}
-                  </ul>
-                </p>
-              )) || <p>Nessuna creatura trovata</p>}
+                <ul className="m-0">
+                  {modalData?.value.map((creature) => {
+                    return (
+                      <li
+                        key={creature.id + creature.name}
+                        data-bs-toggle="modal"
+                        data-bs-target="#creatureModal"
+                        onClick={() => {
+                          setModalData({
+                            ...modalData,
+                            creature: creature,
+                          });
+                        }}
+                        className="cursor-pointer fw-semibold"
+                      >
+                        {creature.name}
+                      </li>
+                    );
+                  })}
+                </ul>
+              )) || <p className="m-0">Nessuna creatura trovata</p>}
             </div>
             <div className="modal-footer">
               <button
@@ -164,6 +183,35 @@ export default function BestiaryPage() {
                 data-bs-dismiss="modal"
               >
                 Chiudi
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Creature Details Modal */}
+      <div className="modal fade" id="creatureModal" tabIndex="-1">
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5" id="creatureModalLabel">
+                Ciao sono un {modalData?.creature?.name}
+              </h1>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body">CCCCCCCCCCC</div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
               </button>
             </div>
           </div>
