@@ -84,7 +84,6 @@ export default function BestiaryPage() {
                     triggerValue
                   );
                   value.sort((a, b) => a.name.localeCompare(b.name));
-                  console.log(value);
 
                   const count = value.length;
 
