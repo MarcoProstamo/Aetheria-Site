@@ -1,5 +1,6 @@
 import { useBestiaryContext } from "../contexts/BestiaryContext";
 import { useState } from "react";
+import MonsterCard from "../components/MonsterCard";
 
 function getCellColor(value) {
   if (value === 0) return "bg-opacity-10 bg-success";
@@ -203,7 +204,11 @@ export default function BestiaryPage() {
                 aria-label="Close"
               ></button>
             </div>
-            <div className="modal-body">CCCCCCCCCCC</div>
+            <div className="modal-body">
+              {modalData?.creature && (
+                <MonsterCard monster={modalData.creature} />
+              )}
+            </div>
             <div className="modal-footer">
               <button
                 type="button"
