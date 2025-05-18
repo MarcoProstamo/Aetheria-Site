@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { Wheel } from "react-custom-roulette";
-import { useShopContext } from "../contexts/ShaZamShop";
+import { useShopContext } from "../contexts/ShopContext";
 
 export default function WheelComponent() {
-  const entries = useShopContext();
+  const { wheelEntries } = useShopContext();
 
   const [mustSpin, setMustSpin] = useState(false);
   const [prizeNumber, setPrizeNumber] = useState(0);
   const [result, setResult] = useState(null);
 
   const handleSpinClick = () => {
-    const randomIndex = Math.floor(Math.random() * entries.length);
+    const randomIndex = Math.floor(Math.random() * wheelEntries.length);
     setPrizeNumber(randomIndex);
     setMustSpin(true);
   };
@@ -20,7 +20,7 @@ export default function WheelComponent() {
       <Wheel
         mustStartSpinning={mustSpin}
         prizeNumber={prizeNumber}
-        data={entries}
+        data={wheelEntries}
         spinDuration={0.4}
         innerRadius={30}
         innerBorderWidth={2}
@@ -36,7 +36,7 @@ export default function WheelComponent() {
         backgroundColors={["#FFCC00", "#FF9900", "#3366CC", "#66CCFF"]}
         onStopSpinning={() => {
           setMustSpin(false);
-          setResult(entries[prizeNumber]);
+          setResult(wheelEntries[prizeNumber]);
         }}
       />
       <button className="btn btn-primary mt-4" onClick={handleSpinClick}>
