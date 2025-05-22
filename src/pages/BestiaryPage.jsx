@@ -1,5 +1,5 @@
 import { useBestiaryContext } from "../contexts/BestiaryContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MonsterCard from "../components/MonsterCard";
 
 function getCellColor(value) {
@@ -11,31 +11,41 @@ function getCellColor(value) {
   return "bg-primary";
 }
 
-function getValueByType(creatures, damageType, triggerValue) {
-  const totalImmune = creatures.filter((creature) => {
-    switch (triggerValue) {
-      case 1:
-        return creature.immune?.includes(damageType);
-      case 2:
-        return creature.resist?.includes(damageType);
-      case 3:
-        return creature.vulnerable?.includes(damageType);
-    }
-  });
-  return totalImmune;
+function getValueByType(creatures, damageType, conditionType, triggerValue) {
+  switch (triggerValue) {
+    case 1:
+      return creatures.filter((c) => c.immune?.includes(damageType));
+    case 2:
+      return creatures.filter((c) => c.resist?.includes(damageType));
+    case 3:
+      return creatures.filter((c) => c.vulnerable?.includes(damageType));
+    case 4:
+      return creatures.filter((c) =>
+        c.conditionImmune?.includes(conditionType)
+      );
+    default:
+      return [];
+  }
 }
 
 export default function BestiaryPage() {
-  const { types, damages, monstersByType } = useBestiaryContext();
+  const { types, damages, monstersByType, conditions } = useBestiaryContext();
   const [triggerValue, setTriggerValue] = useState(1);
   const [modalData, setModalData] = useState(null);
-
-  const rowLabels = damages;
+  const [rowLabels, setRowLabels] = useState(damages);
   const columnLabels = types;
   const monsterMap = {};
   monstersByType.forEach((type) => {
     monsterMap[type.name.toLowerCase()] = type.monsters;
   });
+
+  useEffect(() => {
+    if (triggerValue === 4) {
+      setRowLabels(conditions);
+    } else {
+      setRowLabels(damages);
+    }
+  }, [triggerValue, conditions, damages]);
 
   return (
     <div className="container my-3">
@@ -48,20 +58,29 @@ export default function BestiaryPage() {
           )) ||
           (triggerValue === 3 && (
             <h1 className="text-center fw-bold">Vulnerabilità ai Danni</h1>
+          )) ||
+          (triggerValue === 4 && (
+            <h1 className="text-center fw-bold">Immunità alle Condizioni</h1>
           ))}
         <button
           type="button"
           className="fs-5 btn btn-primary fw-semibold"
           onClick={() => {
             setTriggerValue(
-              triggerValue === 1 ? 2 : triggerValue === 2 ? 3 : 1
+              triggerValue === 1
+                ? 2
+                : triggerValue === 2
+                ? 3
+                : triggerValue === 3
+                ? 4
+                : 1
             );
           }}
         >
           Switch
         </button>
       </div>
-      <div className="table-responsive">
+      <div className="table-responsive p-1">
         <table className="table table-bordered table-dark">
           <thead>
             <tr>
@@ -74,18 +93,18 @@ export default function BestiaryPage() {
             </tr>
           </thead>
           <tbody>
-            {rowLabels.map((damageType, rowIndex) => (
+            {rowLabels.map((label, rowIndex) => (
               <tr key={rowIndex}>
-                <td className="fw-bold text-center">{damageType}</td>
+                <td className="fw-bold text-center">{label}</td>
                 {columnLabels.map((creatureType, colIndex) => {
                   const monsters = monsterMap[creatureType.toLowerCase()];
                   const value = getValueByType(
                     monsters,
-                    damageType.toLowerCase(),
+                    triggerValue === 4 ? null : label.toLowerCase(), // damageType
+                    triggerValue === 4 ? label.toLowerCase() : null, // conditionType
                     triggerValue
                   );
                   value.sort((a, b) => a.name.localeCompare(b.name));
-
                   const count = value.length;
 
                   return (
@@ -97,7 +116,7 @@ export default function BestiaryPage() {
                       onClick={() =>
                         setModalData({
                           type: creatureType,
-                          damage: damageType,
+                          damage: label,
                           value,
                         })
                       }
